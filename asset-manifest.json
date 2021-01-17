@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/ImageRepositoryShopify/static/css/main.8313e21f.chunk.css",
+    "main.js": "/ImageRepositoryShopify/static/js/main.5c5cff3a.chunk.js",
+    "main.js.map": "/ImageRepositoryShopify/static/js/main.5c5cff3a.chunk.js.map",
+    "runtime-main.js": "/ImageRepositoryShopify/static/js/runtime-main.a334a291.js",
+    "runtime-main.js.map": "/ImageRepositoryShopify/static/js/runtime-main.a334a291.js.map",
+    "static/css/2.20aa2d7b.chunk.css": "/ImageRepositoryShopify/static/css/2.20aa2d7b.chunk.css",
+    "static/js/2.c32256ca.chunk.js": "/ImageRepositoryShopify/static/js/2.c32256ca.chunk.js",
+    "static/js/2.c32256ca.chunk.js.map": "/ImageRepositoryShopify/static/js/2.c32256ca.chunk.js.map",
+    "index.html": "/ImageRepositoryShopify/index.html",
+    "static/css/2.20aa2d7b.chunk.css.map": "/ImageRepositoryShopify/static/css/2.20aa2d7b.chunk.css.map",
+    "static/css/main.8313e21f.chunk.css.map": "/ImageRepositoryShopify/static/css/main.8313e21f.chunk.css.map",
+    "static/js/2.c32256ca.chunk.js.LICENSE.txt": "/ImageRepositoryShopify/static/js/2.c32256ca.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a334a291.js",
+    "static/css/2.20aa2d7b.chunk.css",
+    "static/js/2.c32256ca.chunk.js",
+    "static/css/main.8313e21f.chunk.css",
+    "static/js/main.5c5cff3a.chunk.js"
+  ]
+}
