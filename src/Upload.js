@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import "firebase/database";
-import { app, db, storage } from './base';
-import firebase from 'firebase';
+import { db, storage } from './base';
+import Button from 'react-bootstrap/Button';
 
 class Upload extends Component {
     constructor(props) {
@@ -11,23 +11,17 @@ class Upload extends Component {
         this.state = {
             selectedImagesToUpload: [],
             imageData: null,
+            doneUploading: false
         }
     }
 
     uploadImage(){
-        this.state.selectedImagesToUpload.map(imageObj => {
+        let imagesToUpload = this.state.selectedImagesToUpload
+        imagesToUpload.map(imageObj => {
           let uploadTask = storage.ref('images/' + imageObj.fileName).put(imageObj.file);
           uploadTask.on('state_changed', function(snapshot){
           let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
-              console.log('Upload is paused');
-              break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
-              console.log('Upload is running');
-              break;
-          }
             }, function(error) {
                 alert("error uploading");
             }, function() {
@@ -37,8 +31,8 @@ class Upload extends Component {
                     let newImage = db.ref('images').push();
                     imageObj.url = downloadURL
                     newImage.set(imageObj);
-                });
-            });
+                })
+            })
         })
     }
 
@@ -59,12 +53,6 @@ class Upload extends Component {
             }
             reader.readAsDataURL(file[1]);
         })
-        // let reader = new FileReader();
-        // reader.onloadend = () => {
-        //     let url = reader.result;
-        //     this.setState({test: url})
-        // }
-        // reader.readAsDataURL(e.target.files[0]);
     }
 
     addImage(title) {
@@ -89,20 +77,30 @@ class Upload extends Component {
 
     render() {
         return (
-            <div>
-                <input multiple type="file" name="file" onChange={this.selectImagesToUpload}/>
-                <button onClick={this.uploadImage}>Upload Image</button>
+            <div className="Upload">
+                <div className="UploadArea">
+                    <div className="UploadButtons">
+                        <input multiple type="file" name="file" onChange={this.selectImagesToUpload}/>
+                        <Button onClick={() => {this.uploadImage()}}>Upload Image</Button>
+                    </div>
+                    {/* <div className="ProgressBar">
+                        <ProgressBar now={this.state.uploadProgress} label={`${this.state.uploadProgress}%`}/>
+                    </div> */}
+                </div>
                 {this.state.selectedImagesToUpload.length > 0 && 
-                    <div style={{display: "flex"}}>
+                    <div className="UploadContainer">
                         {this.state.selectedImagesToUpload.map((fileObj, i) => {
-                            console.log(i);
                             return (
-                                <div style={{display: "flex", flexDirection: "column", width: "100%", height: "100%"}}>
-                                    <img style={{ maxWidth: "250px", maxHeight: "250px" }} src={fileObj.url} />
-                                    <label>Change Name:</label>
-                                    <input type="text" placeholder={fileObj.name} onChange={(e) => {this.addImageName(e, i)}}/>
-                                    <label>Add Description:</label>
-                                    <input type="text" onChange={(e) => {this.addImageDescription(e, i)}}/>
+                                <div className="UploadObject">
+                                    <img src={fileObj.url} />
+                                    <div className="uploadText">
+                                        <div className="title">
+                                            <input type="text" placeholder={fileObj.name} onChange={(e) => {this.addImageName(e, i)}}/>
+                                        </div>
+                                        <div className="description">
+                                            <input type="text" onChange={(e) => {this.addImageDescription(e, i)}}/>
+                                        </div>
+                                    </div>
                                 </div>
                             )
                         })}

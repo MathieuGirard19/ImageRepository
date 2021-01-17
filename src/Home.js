@@ -10,10 +10,8 @@ import firebase from 'firebase';
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.selectImagesToDelete = this.selectImagesToDelete.bind(this);
     this.deleteImage = this.deleteImage.bind(this);
     this.clearCheckBoxes = this.clearCheckBoxes.bind(this);
-    this.checkAll = this.checkAll.bind(this);
     this.editImage = this.editImage.bind(this);
     this.saveEdits = this.saveEdits.bind(this);
     this.cancelEdits = this.cancelEdits.bind(this);
@@ -34,11 +32,8 @@ class Home extends Component {
   }
 
   deleteImage(id){
-    // this.state.selectedImagesToDelete.map(id => {
-    //   db.ref('images/' + id).remove();
-    //   this.clearCheckBoxes()
-    // })
-    db.ref('images/' + id).remove()
+    db.ref('images/' + id).remove();
+    this.setState({imageEditId: null});
   }
 
   clearCheckBoxes(){
@@ -49,36 +44,12 @@ class Home extends Component {
     this.setState({selectedImagesToDelete: []})
   }
 
-  checkAll(e){
-    let checkboxes = document.getElementsByClassName('checkboxes');
-    let selectedImages = this.state.selectedImagesToDelete;
-    if (!e.target.checked) this.clearCheckBoxes(); 
-    Object.entries(checkboxes).map(checkbox => {
-      checkbox[1].checked = e.target.checked;
-      if(!selectedImages.includes(checkbox[1].id)){
-        selectedImages.push(checkbox[1].id);
-      }
-    })
-    if (e.target.checked) this.setState({selectedImagesToDelete: selectedImages});
-  }
-
-  selectImagesToDelete(e, id){
-    let selectedImages = this.state.selectedImagesToDelete;
-    if(e.target.checked){
-      selectedImages.push(id);
-      this.setState({selectedImagesToDelete: selectedImages})
-    }
-    else{
-      selectedImages = selectedImages.filter(currentId => {return currentId != id});
-      this.setState({selectedImagesToDelete: selectedImages})
-    }
-  }
-
   editImage(id){
     let newImageData = this.state.imageData;
     newImageData[id].edit = true;
     if(this.state.imageEditId != null){
         //used to turnoff any other images in edit mode
+        console.log(this.state.imageEditId);
         newImageData[this.state.imageEditId].edit = false;
     }
     this.setState({
@@ -87,28 +58,28 @@ class Home extends Component {
     });
   }
 
-  nameEdit(e, id){
-    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[id]));
+  nameEdit(e){
+    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[this.state.imageEditId]));
     editedImage.name = e.target.value;
     this.setState({imageEdit: editedImage})
   }
 
-  descriptionEdit(e, id){
-    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[id]));
+  descriptionEdit(e){
+    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[this.state.imageEditId]));
     editedImage.description = e.target.value;
     this.setState({imageEdit: editedImage})
   }
 
-  saveEdits(id){
+  saveEdits(){
     let imageEdit = this.state.imageEdit;
     delete imageEdit.edit;
-    db.ref("images/" + id).set(this.state.imageEdit);
-    this.cancelEdits(id);
+    db.ref("images/" + this.state.imageEditId).set(this.state.imageEdit);
+    this.cancelEdits(this.state.imageEditId);
   }
 
-  cancelEdits(id){
+  cancelEdits(){
     let newImageData = this.state.imageData;
-    newImageData[id].edit = false;
+    newImageData[this.state.imageEditId].edit = false;
     this.setState({
         imageData: newImageData,
         imageEdit: null,
@@ -130,10 +101,10 @@ class Home extends Component {
                       {imageData.edit ?
                           <div className="imageText">
                             <div className="title">
-                                <input type="text" placeholder={imageData.name} onChange={(e) => {this.nameEdit(e, id)}}/>
+                                <input type="text" placeholder={imageData.name} onChange={(e) => {this.nameEdit(e)}}/>
                             </div>
                             <div className="description">
-                                <input type="text" placeholder={imageData.description} onChange={(e) => this.descriptionEdit(e, id)}/>
+                                <input type="text" placeholder={imageData.description} onChange={(e) => this.descriptionEdit(e)}/>
                             </div>
                           </div>
                           :
@@ -148,14 +119,14 @@ class Home extends Component {
                       }
                       {imageData.edit ?
                         <div className="buttonsEdit">
-                            <Button onClick={() => { this.saveEdits(id) }} variant="success">Save</Button>
-                            <Button onClick={() => { this.cancelEdits(id) }} variant="secondary">Cancel</Button>
-                            <Button onClick={() => { this.deleteImage(id)}} variant="danger">Delete</Button>
+                            <Button onClick={this.saveEdits} variant="success">Save</Button>
+                            <Button onClick={this.cancelEdits} variant="secondary">Cancel</Button>
+                            <Button onClick={() => {this.deleteImage(id)}} variant="danger">Delete</Button>
                         </div>
                         :
                         <div className="buttonsNormal">
-                            <Button className="edit" onClick={() => { this.editImage(id) }} variant="primary">Edit</Button>
-                            <Button onClick={() => { this.deleteImage(id)}} variant="danger">Delete</Button>
+                            <Button className="edit" onClick={() => {this.editImage(id)}} variant="primary">Edit</Button>
+                            <Button onClick={() => {this.deleteImage(id)}} variant="danger">Delete</Button>
                         </div>
                       }
                   </div>

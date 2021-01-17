@@ -73,3 +73,64 @@ body {
 .edit {
     margin-right: 10px;
 }
+
+.UploadContainer {
+    /* background-color: grey; */
+    width: 90%;
+    height: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 30px;
+    display: flex;
+    flex-flow: row wrap; 
+    justify-content: space-around;
+}
+
+.Upload {
+    /* background-color: red; */
+    height: 92%;
+    width: 100%;
+}
+
+.UploadObject {
+    /* background-color: green; */
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: scroll;
+    margin-bottom: 5px;
+}
+
+.UploadObject img {
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.uploadText {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.uploadText input {
+    width: 100%;
+}
+
+.UploadArea {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.UploadButtons {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.ProgressBar {
+    width: 60%;
+    margin-top: 20px;
+}
