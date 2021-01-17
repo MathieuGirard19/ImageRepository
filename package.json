@@ -1,10 +1,14 @@
 {
+  "homepage": "https://MathieuGirard19.github.io/ImageRepositoryShopify",
+  "description": "",
+  "main": "index.js",
   "name": "image_repository",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.5.3",
     "firebase": "^8.2.1",
+    "gh-pages": "^3.1.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
