@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import Navigation from './Navigation';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FirebaseDatabaseProvider, FirebaseDatabaseNode } from "@react-firebase/database";
 import "firebase/database";
-import { app, db, storage } from './base';
+import { db } from './base';
 import Button from 'react-bootstrap/Button';
-import firebase from 'firebase';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.deleteImage = this.deleteImage.bind(this);
-    this.clearCheckBoxes = this.clearCheckBoxes.bind(this);
     this.editImage = this.editImage.bind(this);
     this.saveEdits = this.saveEdits.bind(this);
     this.cancelEdits = this.cancelEdits.bind(this);
@@ -34,14 +30,6 @@ class Home extends Component {
   deleteImage(id){
     db.ref('images/' + id).remove();
     this.setState({imageEditId: null});
-  }
-
-  clearCheckBoxes(){
-    let checkboxes = document.getElementsByClassName('checkboxes');
-    Object.entries(checkboxes).map(checkbox => {
-      checkbox[1].checked = false;
-    })
-    this.setState({selectedImagesToDelete: []})
   }
 
   editImage(id){
@@ -96,8 +84,8 @@ class Home extends Component {
               let id = data[0];
               let imageData = data[1];
               return (
-                  <div className="ImageObject">
-                      <img src={imageData.url} />
+                  <div className="ImageObject" key={id}>
+                      <img alt={imageData.name} src={imageData.url} />
                       {imageData.edit ?
                           <div className="imageText">
                             <div className="title">

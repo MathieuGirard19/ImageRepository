@@ -16,8 +16,8 @@ class Upload extends Component {
     }
 
     uploadImage(){
-        let imagesToUpload = this.state.selectedImagesToUpload
-        imagesToUpload.map(imageObj => {
+        let imagesToUpload = this.state.selectedImagesToUpload;
+        imagesToUpload.map((imageObj, i) => {
           let uploadTask = storage.ref('images/' + imageObj.fileName).put(imageObj.file);
           uploadTask.on('state_changed', function(snapshot){
           let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -25,7 +25,9 @@ class Upload extends Component {
             }, function(error) {
                 alert("error uploading");
             }, function() {
-                alert("done uploading")
+                if(imagesToUpload.length-1 === i){
+                    alert("Upload Complete, See Home Page")
+                }
                 uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                     console.log('File available at', downloadURL);
                     let newImage = db.ref('images').push();
@@ -33,6 +35,7 @@ class Upload extends Component {
                     newImage.set(imageObj);
                 })
             })
+            return null;
         })
     }
 
@@ -52,6 +55,7 @@ class Upload extends Component {
                 this.setState({selectedImagesToUpload: selectedImages});
             }
             reader.readAsDataURL(file[1]);
+            return null;
         })
     }
 
@@ -83,16 +87,13 @@ class Upload extends Component {
                         <input multiple type="file" name="file" onChange={this.selectImagesToUpload}/>
                         <Button onClick={() => {this.uploadImage()}}>Upload Image</Button>
                     </div>
-                    {/* <div className="ProgressBar">
-                        <ProgressBar now={this.state.uploadProgress} label={`${this.state.uploadProgress}%`}/>
-                    </div> */}
                 </div>
                 {this.state.selectedImagesToUpload.length > 0 && 
                     <div className="UploadContainer">
                         {this.state.selectedImagesToUpload.map((fileObj, i) => {
                             return (
                                 <div className="UploadObject">
-                                    <img src={fileObj.url} />
+                                    <img alt={fileObj.name} src={fileObj.url} />
                                     <div className="uploadText">
                                         <div className="title">
                                             <input type="text" placeholder={fileObj.name} onChange={(e) => {this.addImageName(e, i)}}/>

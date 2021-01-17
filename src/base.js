@@ -1,11 +1,6 @@
 import firebase from 'firebase';
 import "firebase/storage";
 
-{/* <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-
-https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script> */}
-
 var config = {
     apiKey: "AIzaSyB5DOgKEJRorRjJJW6dXmp7a3j-YZP1uU0",
     authDomain: "shopify-image-repo-606fb.firebaseapp.com",
