@@ -122,9 +122,6 @@ class Home extends Component {
             })
           }
         </div>
-        {/* <button onClick={this.deleteImages}>Delete</button>
-        <input id="checkAll" type="checkbox" onClick={(e) => {this.checkAll(e)}}></input>
-        <label for="checkAll">Select All</label> */}
       </div>
     )
   };
