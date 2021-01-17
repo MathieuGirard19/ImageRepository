@@ -16,13 +16,14 @@ class Home extends Component {
     this.state = {
       imageData: null,
       selectedImagesToDelete: [],
-      imageEdit: null,
+      imageEdits: null,
       imageEditId: null
     }
   }
 
   componentDidMount() {
     db.ref('images').on('value', (snapshot) => {
+      console.log(snapshot.val());
       this.setState({imageData: snapshot.val()})
     });
   }
@@ -33,44 +34,35 @@ class Home extends Component {
   }
 
   editImage(id){
-    let newImageData = this.state.imageData;
-    newImageData[id].edit = true;
-    if(this.state.imageEditId != null){
-        //used to turnoff any other images in edit mode
-        console.log(this.state.imageEditId);
-        newImageData[this.state.imageEditId].edit = false;
-    }
+    let imageToEdit = JSON.parse(JSON.stringify(this.state.imageData[id]))
     this.setState({
-        imageData: newImageData,
-        imageEditId: id
+      imageEditId: id,
+      imageEdits: imageToEdit
     });
   }
 
   nameEdit(e){
-    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[this.state.imageEditId]));
+    let editedImage = this.state.imageEdits;
     editedImage.name = e.target.value;
-    this.setState({imageEdit: editedImage})
+    this.setState({imageEdits: editedImage})
   }
 
   descriptionEdit(e){
-    let editedImage = JSON.parse(JSON.stringify(this.state.imageData[this.state.imageEditId]));
+    let editedImage = this.state.imageEdits;
     editedImage.description = e.target.value;
     this.setState({imageEdit: editedImage})
   }
 
   saveEdits(){
-    let imageEdit = this.state.imageEdit;
+    let imageEdit = this.state.imageEdits;
     delete imageEdit.edit;
-    db.ref("images/" + this.state.imageEditId).set(this.state.imageEdit);
-    this.cancelEdits(this.state.imageEditId);
+    db.ref("images/" + this.state.imageEditId).set(imageEdit);
+    this.cancelEdits()
   }
 
   cancelEdits(){
-    let newImageData = this.state.imageData;
-    newImageData[this.state.imageEditId].edit = false;
     this.setState({
-        imageData: newImageData,
-        imageEdit: null,
+        imageEdits: null,
         imageEditId: null
     });
   }
@@ -86,7 +78,7 @@ class Home extends Component {
               return (
                   <div className="ImageObject" key={id}>
                       <img alt={imageData.name} src={imageData.url} />
-                      {imageData.edit ?
+                      {id == this.state.imageEditId ?
                           <div className="imageText">
                             <div className="title">
                                 <input type="text" placeholder={imageData.name} onChange={(e) => {this.nameEdit(e)}}/>
@@ -105,7 +97,7 @@ class Home extends Component {
                             </div>
                           </div>
                       }
-                      {imageData.edit ?
+                      {id == this.state.imageEditId ?
                         <div className="buttonsEdit">
                             <Button onClick={this.saveEdits} variant="success">Save</Button>
                             <Button onClick={this.cancelEdits} variant="secondary">Cancel</Button>
